@@ -150,40 +150,6 @@ def convert_excel_to_base64(file_path):
         return encoded_string.decode()
 
 
-# 定义加密函数
-def encrypt(user_data, key=SECRET_KEY):
-    cipher = AES.new(key, AES.MODE_ECB)
-    user_data = user_data + (16 - len(user_data) % 16) * chr(16 - len(user_data) % 16)
-    ciphertext = cipher.encrypt(user_data.encode())
-    return base64.b64encode(ciphertext).decode()
-
-
-def encrypt2(user_data, key=SECRET_KEY):
-    cipher = AES.new(key, AES.MODE_ECB)
-    # 使用专门的填充函数
-    user_data_padded = pad(user_data.encode('utf-8'), 16)
-    ciphertext = cipher.encrypt(user_data_padded)
-    return base64.b64encode(ciphertext).decode()
-
-
-# 定义解密函数
-def decrypt(ciphertext, key=SECRET_KEY):
-    cipher = AES.new(key, AES.MODE_ECB)
-    plaintext = cipher.decrypt(base64.b64decode(ciphertext)).decode()
-    plaintext = plaintext[:-ord(plaintext[-1])]
-    return plaintext
-
-
-def decrypt2(ciphertext, key=SECRET_KEY):
-    try:
-        cipher = AES.new(key, AES.MODE_ECB)
-        decrypted_data = cipher.decrypt(base64.b64decode(ciphertext))
-        plaintext = unpad(decrypted_data, 16).decode('utf-8')
-        return plaintext
-    except Exception:
-        return ciphertext
-
-
 # 分割包含多种字符和符号的文本，包括但不限于中英文混合的文本
 def extract_segments_generic(text):
     # 使用正则表达式匹配任何非字母数字的字符序列作为分隔符
